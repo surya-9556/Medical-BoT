@@ -17,12 +17,11 @@ RUN apt-get update && apt-get install -y \
 # Copy project files
 COPY . .
 
-# Allow dynamic UV version
-ARG UV_VERSION=latest
+# ❌ REMOVED: ARG UV_VERSION=latest (pip does not support "latest")
 
 # Install uv and dependencies from pyproject.toml
 RUN python -m ensurepip --upgrade \
-    && python -m pip install --no-cache-dir "uv==$UV_VERSION" \
+    && python -m pip install --no-cache-dir uv \
     && uv install --no-cache-dir
 
 # Expose port
