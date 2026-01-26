@@ -1,4 +1,3 @@
-# Base image
 FROM python:3.13-slim
 
 ENV PYTHONDONTWRITEBYTECODE=1 \
@@ -13,10 +12,9 @@ RUN apt-get update && apt-get install -y \
 
 COPY . .
 
-# Install uv and dependencies
 RUN python -m ensurepip --upgrade \
     && python -m pip install --no-cache-dir uv \
-    && uv pip install --system --no-cache-dir
+    && uv pip install --system --no-cache-dir -e .
 
 EXPOSE 5000
 
