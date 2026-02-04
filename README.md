@@ -1,145 +1,127 @@
-# Medical-BoT
+# Medical-BoT: My Enterprise-Grade Medical RAG Chatbot
 
-Medical-BoT is an end-to-end medical question-answering chatbot that uses Retrieval-Augmented Generation (RAG) over a curated medical knowledge base to provide accurate and explainable responses to user queries.
+## Overview
+I built **Medical-BoT**, an **end-to-end, production-ready medical question-answering chatbot** that uses **Retrieval-Augmented Generation (RAG)** to provide accurate, context-aware, and explainable responses to user queries. My focus was on creating a **modular architecture** with integrated **CI/CD pipelines, containerization, and cloud deployment**, reflecting **real-world enterprise AI engineering practices**.
 
-## Features
+This project showcases my skills in **AI development, cloud deployment, and MLOps**, making it ideal for senior recruiters and technical leadership to evaluate my hands-on expertise.
 
-* Retrieval-Augmented Generation using a FAISS vector store built from structured medical documents.
-* Modular application layout with clear separation of components, configuration, and shared utilities.
-* Web application interface powered by an `application.py` entrypoint under the `app` package.
-* Containerized deployment using a production-ready Dockerfile.
-* CI/CD-ready with a Jenkinsfile for automated builds, tests, and deployment pipelines.
-* Python project metadata and dependency management via `pyproject.toml`, `setup.py`, and `uv.lock`.
+---
 
-## Project Structure
+## Key Features
+- I implemented **RAG** using a FAISS vector store built from structured medical documents.
+- Designed a **modular architecture** with clear separation of components, configuration, and utilities.
+- Enabled **fast setup** using `./setup.sh` and **UV** for deterministic dependency management.
+- Developed a **web interface** via `app/application.py`.
+- Exposed a **REST API** using **FastAPI** for scalable, low-latency requests.
+- Orchestrated **LangChain + Groq + FAISS + HuggingFace embeddings** for semantic search and context-aware responses.
+- Performed NLP preprocessing using **spaCy** and **NLTK**.
+- Containerized the application with **Docker** for reproducibility.
+- Set up **CI/CD pipelines with Jenkins** for automated build, test, and deployment.
+- Integrated **SonarQube** for code quality and security checks.
+- Deployed to the cloud using **AWS ECR + AWS App Runner / EKS Free Tier**.
 
-```text
-Medical-BoT/
-├── Vectorstore/
-│   └── df_faiss/           # Persisted FAISS index and related vector store artifacts
-├── app/
-│   ├── common/             # Shared utilities and helper functions
-│   ├── components/         # Core application components (routes, services, etc.)
-│   ├── config/             # Configuration files and settings
-│   ├── templates/          # Frontend templates for the web UI
-│   ├── __init__.py         # App package initialization
-│   └── application.py      # Main application entrypoint
-├── custom_jenkins/         # Custom Jenkins-related scripts/configurations
-├── data/                   # Source medical data and processed artifacts
-├── .gitignore
-├── .python-version
-├── Dockerfile
-├── Jenkinsfile
-├── main.py                 # Top-level runner or bootstrap script
-├── pyproject.toml
-├── setup.py
-└── uv.lock
-```
+---
 
-## Getting Started
+## Tech Stack
+| Layer | Tools / Libraries |
+|-------|-----------------|
+| Version Control & CI/CD | GitHub + **Jenkins** |
+| Containerization | Docker (UV inside image for fast setup) |
+| Cloud Deployment | AWS ECR + AWS App Runner / EKS (Free Tier) |
+| Retrieval & NLP | LangChain, FAISS, HuggingFace, Sentence-Transformers, spaCy, NLTK |
+| API / Web Interface | FastAPI + Streamlit |
+| OS / Setup | `./setup.sh` for one-command setup, managed by **UV** |
 
-### Prerequisites
+---
 
-* Python (version specified in `.python-version`)
-* Docker (optional, for containerized runs)
-* Jenkins (optional, if you plan to use the provided CI/CD pipeline)
+## Why I Used UV
+I chose **UV** over pip for dependency management and running the application because it offers several advantages:
 
-### Clone the Repository
+- **Faster dependency installation** – significantly reduces setup time.
+- **Deterministic environments** – lockfile-based installs ensure reproducibility.
+- **Cleaner CI/CD pipelines** – simplifies automated builds and deployments.
+- **Optimized container performance** – lightweight and consistent installations in Docker.
+- **Enterprise-ready tooling** – increasingly adopted in production-grade Python systems.
 
+Example commands I use:
 ```bash
-git clone https://github.com/surya-9556/Medical-BoT.git
+uv sync          # Install dependencies
+uv run app.main  # Run the application
+```
+This ensures **consistency across local, CI/CD, and cloud deployments**.
+
+---
+
+## Quick Start
+
+### 1. Clone the Project
+```bash
+git clone https://github.com/<your-username>/Medical-BoT.git
 cd Medical-BoT
 ```
 
-### Create and Activate a Virtual Environment
-
-Use your preferred virtual environment tool (e.g., `venv`, `conda`, or `uv`):
-
+### 2. Run Setup
 ```bash
-python -m venv .venv
-source .venv/bin/activate   # On Windows: .venv\Scripts\activate
+chmod +x setup.sh
+./setup.sh
 ```
+> This installs all dependencies with **UV**, prepares Docker containers, and sets up the environment.
 
-### Install Dependencies
-
-If you are using **uv**:
-
+### 3. Start the Application
 ```bash
-uv sync
+docker compose up
 ```
+- The API is accessible at: `http://localhost:8000`  
+- You can ask medical queries and receive **context-aware responses** from the knowledge base.
 
-Or with standard tools (depending on how `pyproject.toml` / `setup.py` is configured):
-
-```bash
-pip install -e .
-```
-
-## Running the Application
-
-### Local Run via Python
-
-The repository includes `main.py` and an application module under `app/application.py`. Typical ways to run the service are:
-
+Or locally via Python:
 ```bash
 python main.py
-```
-
-or:
-
-```bash
+# or
 python -m app.application
 ```
 
-Once started, the web interface should be available at a local URL such as:
-
-* `http://127.0.0.1:8000`, or
-* `http://127.0.0.1:5000`
-
-(depending on the framework and configuration—see `application.py` for the exact host and port).
-
-### Run with Docker
-
-Build the image:
-
-```bash
-docker build -t medical-bot .
-```
-
-Run the container:
-
-```bash
-docker run -p 8000:8000 medical-bot
-```
-
-Adjust the exposed port if the application uses a different internal port.
+---
 
 ## Data and Vector Store
+- `data/`: Contains raw and processed medical documents used by the chatbot.
+- `Vectorstore/df_faiss/`: Contains the persisted FAISS index for fast semantic search.
 
-* The `data/` directory is intended for raw and processed medical documents used to power the chatbot.
-* The `Vectorstore/df_faiss/` directory holds the FAISS index and associated files for efficient similarity search.
+**To update the vector store:**
+1. Preprocess new medical documents into chunks.
+2. Rebuild the FAISS index in `Vectorstore/df_faiss/`.
 
-If you modify or add new medical data, you will typically need to:
+---
 
-1. Preprocess the data into chunks or documents.
-2. Rebuild the FAISS index and save it under `Vectorstore/df_faiss/`.
+## CI/CD & Code Quality
+I set up automated CI/CD using Jenkins and ensured code quality with SonarQube:
+- **Jenkinsfile** defines the build, test, and deployment stages.
+- **custom_jenkins/** contains scripts and configurations for Jenkins agents.
+- **SonarQube** performs static analysis, maintainability checks, and security scans.
 
-(Refer to your internal data-preparation scripts or notebooks for the exact pipeline.)
-
-## CI/CD with Jenkins
-
-This repository is prepared for automated pipelines:
-
-* `Jenkinsfile` defines the main Jenkins pipeline stages (build, test, deploy, etc.).
-* `custom_jenkins/` can hold custom scripts, shared libraries, or configuration for Jenkins agents.
-
-To use it:
-
+Steps I follow:
 1. Configure a Jenkins job pointing to this repository.
-2. Ensure required environment variables and credentials are set in Jenkins.
-3. Trigger the pipeline; Jenkins will follow the stages defined in the `Jenkinsfile`.
+2. Set required environment variables and credentials.
+3. Trigger the pipeline to build, test, scan, and deploy Docker images to AWS ECR / EKS.
+
+---
+
+## Cloud Deployment
+- I push Docker images to **AWS ECR**.
+- Deploy the application via **AWS App Runner** or **AWS EKS Free Tier**.
+- Designed for horizontal scaling, rolling updates, and enterprise-ready cloud orchestration.
+
+---
 
 ## Configuration
+- `app/config/`: Contains environment variables, model paths, and vector store locations.
+- I update configurations to point to my own data, vector store, or external services as needed.
 
-The `app/config/` directory contains configuration modules or files for environment variables, model paths, and vector store locations.
+---
 
-Update configuration there to point to your own data, vector store, or external services as needed.
+## Future Enhancements
+- Implement multi-document ingestion pipeline and dynamic updates.
+- Improve **query ranking and relevance scoring**.
+- Add user authentication, logging, and monitoring.
+- Expand knowledge base beyond PDFs.
+- Introduce agent memory and advanced task coordination.
