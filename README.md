@@ -17,7 +17,6 @@ This project showcases my skills in **AI development, cloud deployment, and MLOp
 - Performed NLP preprocessing using **spaCy** and **NLTK**.
 - Containerized the application with **Docker** for reproducibility.
 - Set up **CI/CD pipelines with Jenkins** for automated build, test, and deployment.
-- Integrated **SonarQube** for code quality and security checks.
 - Deployed to the cloud using **AWS ECR + AWS App Runner / EKS Free Tier**.
 
 ---
@@ -94,10 +93,9 @@ python -m app.application
 ---
 
 ## CI/CD & Code Quality
-I set up automated CI/CD using Jenkins and ensured code quality with SonarQube:
+I set up automated CI/CD using Jenkins:
 - **Jenkinsfile** defines the build, test, and deployment stages.
 - **custom_jenkins/** contains scripts and configurations for Jenkins agents.
-- **SonarQube** performs static analysis, maintainability checks, and security scans.
 
 Steps I follow:
 1. Configure a Jenkins job pointing to this repository.
